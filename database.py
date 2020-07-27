@@ -54,9 +54,6 @@ class Database():
         """
 
         self.database = dict(zip(names, [Profile(name, biography=bio, descriptor_vector=vec) for name, bio, vec in zip(names, biographies, descriptor_vectors)]))
-                
-        self.names = list(self.database.keys())
-        self.biographies = [self.database[name].biography for name in self.names]
         
     
     def add_and_update_profiles(self, names, biographies, descriptor_vectors):
@@ -108,8 +105,16 @@ class Database():
         with open(filename, mode='rb') as file:
             loaded_db = pickle.load(file)
         self.database.update(loaded_db)
-        self.names = list(self.database.keys())
-        self.biographies = [self.database[name].biography for name in self.names]
+    
+
+    @property
+    def names(self):
+        return list(self.database.keys())
+    
+
+    @property
+    def biographies(self):
+        return [self.database[name].biography for name in self.names]
 
 """
 # Database Class usage
