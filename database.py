@@ -109,7 +109,7 @@ class Database():
 
     @property
     def names(self):
-        return list(self.database.keys())
+        return sorted(list(self.database.keys()))
     
 
     @property
