@@ -12,14 +12,14 @@ def find_friends(k, lonely_person, lonely_person_answers, other_lonely_people_an
     lonely_person : str?
         ID/name of the given lonely person
 
-    lonely_person_answers : np.array - shape-(M, 50)
-        The given user's answers' descriptor vectors, where M is the number of
-        questions
+    lonely_person_answers : np.array - shape-(D,)
+        The given user's answers' descriptor vectors, where D is the size of the
+        vocabulary
 
     other_lonely_people_answers : dict
         Database of len-N, where N is the number of users (including our poor
         lonely user), that maps names to a set of descriptor vectors
-        (shape-(M, 50) each)
+        (shape-(D,) each)
 
     Returns
     -------
@@ -29,11 +29,15 @@ def find_friends(k, lonely_person, lonely_person_answers, other_lonely_people_an
 
     """
 
+#You make me very sad.
+
+#Very sad indeed.
+
     del other_lonely_people_answers[lonely_person]
 
     print('(N) - Number of other users: '
           + (len(other_lonely_people_answers)))
-    print('(N, M, 50) - Shape of answer database excluding user: '
+    print('(N, D) - Shape of answer database excluding user: '
           + np.array(list(other_lonely_people_answers.values())).shape)
 
     names = np.array(list(other_lonely_people_answers.keys()))
@@ -41,20 +45,9 @@ def find_friends(k, lonely_person, lonely_person_answers, other_lonely_people_an
     answers = np.array(list(other_lonely_people_answers.values()))
     print('answers initialized')
 
-    #answers_transposed = np.swapaxes(answers, 0, 1)
-    #print('(N, 50, M) - Shape of transposition: ' + answers_transposed.shape)
+    print('(D, N) - Shape of transposition: ' + answers.T.shape)
 
-    #creating an ndarray of shape-(N, M)
-    cos_distances = np.ndarray(shape=(answers.shape[0], answers.shape[1]))
-
-    for name in range(len(names)):
-        for answer in range(len(lonely_person_answers)):
-            cos_distances[name, answer] = np.matmul(lonely_person_answers[answer],
-                                            np.swapaxes(answers[answer], 0, 1)) /
-                                            (lonely_person_answers[answer] *
-                                            answers_transposed[answer])
-
-    distances = np.sum(cos_distances, axis=1)
+    cos = np.matmul(lonely_person_answers, answers.T)
 
     zip_dists = []
     top_k = []
