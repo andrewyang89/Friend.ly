@@ -4,11 +4,7 @@ from collections import Counter
 from database import Database
 
 db = Database()
-entries = db.biographies
-# these need to be imported from the input file
-new_name = input("Please enter your name: ")
-new_entry = input("Tell us about yourself: ")
-entries.append(new_entry)
+num_people = 10
 
 with open("./stopwords.txt", 'r') as r:
     stops = []
@@ -129,11 +125,23 @@ def compute_descriptors(all_entries):
 
     tfs = np.vstack(tfs)
     idfs = list(to_idf(len(all_entries), word_counts).values())
-    print(tfs)
     tf_idf = tfs * idfs
+
     return tf_idf
 
+def new_person():
+    names = db.names
+    entries = db.biographies
+    new_name = input("Please enter your name: ")
+    # connect to audio to text file
+    new_entry = input("Tell us about yourself: ")
+    names.append(new_name)
+    entries.append(new_entry)
 
-descriptors = compute_descriptors(entries)
-db.add_profile(new_name, new_entry, descriptors[-1])
-print(descriptors.shape)
+    descriptors = compute_descriptors(entries)
+    db.add_and_update_profiles(names, entries, descriptors)
+
+for i in range(num_people):
+    new_person()
+
+db.save('loaded_10_people.pkl')
