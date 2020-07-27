@@ -1,26 +1,22 @@
-
 import numpy as np
 import re, string
 from collections import Counter
 from database import Database
 
-
-entries = Database.biographies
-
+db = Database()
+entries = db.biographies
 # these need to be imported from the input file
-new_name = name
-new_entry = entry
-entries.append(entry)
-
-
+new_name = input("Please enter your name: ")
+new_entry = input("Tell us about yourself: ")
+entries.append(new_entry)
 
 with open("./stopwords.txt", 'r') as r:
     stops = []
     for line in r:
         stops += [i.strip() for i in line.split('\t')]
 
-
 punc_regex = re.compile('[{}]'.format(re.escape(string.punctuation)))
+
 
 def strip_punc(corpus):
     """ Removes all punctuation from a string.
@@ -38,15 +34,15 @@ def strip_punc(corpus):
 
 
 def to_counter(doc):
-    """ 
+    """
     Produce word-count of document, removing all punctuation
     and making all the characters lower-cased.
-    
+
     Parameters
     ----------
     doc : str
         input text
-    
+
     Returns
     -------
     collections.Counter
@@ -55,105 +51,89 @@ def to_counter(doc):
     return Counter(strip_punc(doc).lower().split())
 
 
-def to_idf(vocab, counters):
-    """ 
-    Given the vocabulary, and the word-counts for each document, computes
-    the inverse document frequency (IDF) for each term in the vocabulary.
-    
+def to_idf(N, counters):
+    """
+    Computes the inverse document frequency (IDF) from the total word count.
+
     Parameters
     ----------
-    vocab : Sequence[str]
-        Ordered list of words that we care about.
+    N: int
+        total number of documents
 
     counters : Iterable[collections.Counter]
-        The word -> count mapping for each document.
-    
+        The word -> count mapping for all documents.
+
     Returns
     -------
-    numpy.ndarray
-        An array whose entries correspond to those in `vocab`, storing
-        the IDF for each term `t`: 
-                           log10(N / nt)
-        Where `N` is the number of documents, and `nt` is the number of 
-        documents in which the term `t` occurs.
+    dictionary mapping each word to IDF.
     """
-    N = len(counters)
-    nt = [sum(1 if t in counter else 0 for counter in counters) for t in vocab]
-    nt = np.array(nt, dtype=float)
-    return np.log10(N/nt)
+    return {word: np.log10(N / (1 + count)) for word, count in counters.items() if word not in stops}
 
 
+def to_vocab(old_vocab, stop_words=tuple()):
+    """
+    Sorts vocab and excludes words included in `stop_words`
+
+    Parameters
+    ----------
+    old_vocab : List[str]
+        Old vocab to filter and sort
+
+    stop_words : Collection[str]
+        A collection of words to be ignored when populating the vocabulary
+    """
+    return sorted(i for i in old_vocab if i not in stop_words)
 
 
-def to_tf(counters, vocab):
+def to_tf(counter, vocab):
     """
     Parameters
     ----------
-    counters : collections.Counter
-        The word -> count mapping for each input.
+    counter : collections.Counter
+        The word -> count mapping for all vocab.
     vocab : Sequence[str]
         Ordered list of words that we care about.
-    
+
     Returns
     -------
     numpy.ndarray
         The TF descriptor for each document, whose components represent
         the frequency with which each term in the vocab occurs
         in the given document."""
-    tfs = list()
-    for counter in counters:
-        x = np.array([counter[word] for word in vocab], dtype=float)
-        tfs.append(x / x.sum())
 
-    return np.vstack(tfs)
-
-
-def to_vocab(counters, stop_words=tuple()):
-    """ 
-    [word, word, ...] -> sorted list of top-k unique words
-    Excludes words included in `stop_words`
-    
-    Parameters
-    ----------
-    counters : Iterable[Iterable[str]]
-    
-    k : Optional[int]
-        If specified, only the top-k words are returned
-    
-    stop_words : Collection[str]
-        A collection of words to be ignored when populating the vocabulary
-    """
-    vocab = Counter()
-    for counter in counters:
-        vocab.update(counter)
-        
-    for word in set(stop_words):
-        vocab.pop(word, None)
-    return sorted(i for i in vocab if i not in stop_words)
+    x = np.array([counter[word] for word in vocab], dtype=float)
+    return x / x.sum()
 
 
 def compute_descriptors(all_entries):
     """
     Computes tf_idf descriptors for all entries.
-    
+
     Parameters
     ----------
     all_entries: List[str]
-    
+
     Returns
     -------
-    tf_idf: numpy array -> shape(len(all_inputs), len(vocab))
+    all_weights: numpy array -> shape(len(all_inputs), len(vocab))
     """
-    word_counts = list()
+    word_counts = Counter()
+    tfs = list()
     for entry in all_entries:
-        word_counts.append(to_counter(entry))
-    vocab = to_vocab(word_counts, stop_words=stops)
-    idfs = to_idf(vocab, word_counts)
-    tfs = to_tf(word_counts, vocab)
+        word_counts.update(to_counter(entry))
+
+    vocab = to_vocab(word_counts.keys(), stop_words=stops)
+
+    for entry in all_entries:
+        tfs.append(to_tf(to_counter(entry), vocab))
+
+    tfs = np.vstack(tfs)
+    idfs = list(to_idf(len(all_entries), word_counts).values())
+    print(tfs)
     tf_idf = tfs * idfs
     return tf_idf
-    
+
 
 descriptors = compute_descriptors(entries)
-Database.add_profile(new_name, entry, descriptors[-1])
-
+db.add_profile(new_name, new_entry, descriptors[-1])
+print(descriptors.shape)
