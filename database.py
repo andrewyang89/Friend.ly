@@ -31,6 +31,8 @@ class Profile():
         self.descriptor_vector = descriptor_vector
         self.picture = picture
         self.positivity_score = positivity_score
+
+
     def __repr__(self):
         return "Name: {}\nBiography: {}\nDescriptor Vector: {}".format(self.name, self.biography, self.descriptor_vector)
 
@@ -53,8 +55,8 @@ class Database():
 
         self.database = dict(zip(names, [Profile(name, biography=bio, descriptor_vector=vec) for name, bio, vec in zip(names, raw_text, descriptor_vectors)]))
                 
-        self.biographies = raw_text
         self.names = list(self.database.keys())
+        self.biographies = [self.database[name].biography for name in names]
         
     
     def add_and_update_profiles(self, names, biographies, descriptor_vectors):
