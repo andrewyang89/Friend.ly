@@ -53,7 +53,7 @@ class Database():
             list of descriptor_vectors for the associated raw text biography
         """
 
-        self.database = dict(zip(names, [Profile(name, biography=bio, descriptor_vector=vec) for name, bio, vec in zip(names, raw_text, descriptor_vectors)]))
+        self.database = dict(zip(names, [Profile(name, biography=bio, descriptor_vector=vec) for name, bio, vec in zip(names, biographies, descriptor_vectors)]))
                 
         self.names = list(self.database.keys())
         self.biographies = [self.database[name].biography for name in names]
@@ -80,7 +80,7 @@ class Database():
                 self.database[name].biography = bio
                 self.database[name].descriptor_vector = vec
             else:
-                database[name] = Profile(name, biography=bio, descriptor_vector=vec)
+                self.database[name] = Profile(name, biography=bio, descriptor_vector=vec)
     
     
     def save(self, filename):
