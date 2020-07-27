@@ -13,6 +13,13 @@ new_entry = entry
 entries.append(entry)
 
 
+
+with open("./stopwords.txt", 'r') as r:
+    stops = []
+    for line in r:
+        stops += [i.strip() for i in line.split('\t')]
+
+
 punc_regex = re.compile('[{}]'.format(re.escape(string.punctuation)))
 
 def strip_punc(corpus):
@@ -146,11 +153,6 @@ def compute_descriptors(all_entries):
     tf_idf = tfs * idfs
     return tf_idf
     
-
-with open("./stopwords.txt", 'r') as r:
-    stops = []
-    for line in r:
-        stops += [i.strip() for i in line.split('\t')]
 
 descriptors = compute_descriptors(entries)
 Database.add_profile(new_name, entry, descriptors[-1])
