@@ -1,6 +1,8 @@
 import numpy as np
+from database import Database as db
+from database import Profile
 
-def find_friends(k, lonely_person, lonely_person_answers, other_lonely_people_answers):
+def find_friends(k, lonely_person_name, lonely_people):
     """Computes the cosine distance between the given lonely user's answers'
     descriptor vectors and all all other users' answers' descriptor vectors
 
@@ -12,14 +14,10 @@ def find_friends(k, lonely_person, lonely_person_answers, other_lonely_people_an
     lonely_person : str?
         ID/name of the given lonely person
 
-    lonely_person_answers : np.array - shape-(D,)
-        The given user's answers' descriptor vectors, where D is the size of the
-        vocabulary
-
-    other_lonely_people_answers : dict
+    lonely_people : Database
         Database of len-N, where N is the number of users (including our poor
-        lonely user), that maps names to a set of descriptor vectors
-        (shape-(D,) each)
+        lonely user), that maps names to a Profile instance, each of which has
+        respective descriptor vectors
 
     Returns
     -------
@@ -33,30 +31,39 @@ def find_friends(k, lonely_person, lonely_person_answers, other_lonely_people_an
 
 #Very sad indeed.
 
-    del other_lonely_people_answers[lonely_person]
+    lonely_person = lonely_people.database[lonely_person_name]
 
+    del lonely_people.database[lonely_person_name]
+
+    """
     print('(N) - Number of other users: '
-          + (len(other_lonely_people_answers)))
+          + (len(lonely_people.database)))
     print('(N, D) - Shape of answer database excluding user: '
-          + np.array(list(other_lonely_people_answers.values())).shape)
+          + np.array(list(lonely_people.database.values().descriptor_vector)).shape)
+    """
 
-    names = np.array(list(other_lonely_people_answers.keys()))
+    names = np.array(list(lonely_people.database.keys()))
     print('names initialized')
-    answers = np.array(list(other_lonely_people_answers.values()))
+    profiles = np.array(list(lonely_people.database.values()))
+    print('profiles initialized')
+    answers = np.ndarray(shape=(len(names), len(lonely_person.descriptor_vector)))
     print('answers initialized')
+    for i in range(len(answers)):
+        answers[i] = profiles[i].descriptor_vector
+    print('answers filled')
 
     print('(D, N) - Shape of transposition: ' + answers.T.shape)
 
-    cos = np.matmul(lonely_person_answers, answers.T)
+    cos = np.matmul(lonely_person.descriptor_vector, answers.T)
 
     zip_dists = []
     top_k = []
     for count_to_k in range(k):
-        i = np.argmax(distances)
-        name = names[np.argmax(distances)]
+        i = np.argmax(cos)
+        name = names[np.argmax(cos)]
         top_k.append(name)
-        zip_dists.append(distances[i])
-        distances = np.delete(distances, i)
+        zip_dists.append(cos[i])
+        cos = np.delete(cos, i)
         names = np.delete(names, i)
 
     kscores = list(zip(top_k, zip_dists))
