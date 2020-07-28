@@ -5,7 +5,6 @@ from database import Database
 from recognize_speech import recognize_speech_record
 
 
-db = Database()
 num_people = 10
 
 with open("./stopwords.txt", 'r') as r:
