@@ -98,7 +98,7 @@ class Node:
         self.file_path = file_path
 
 
-def plot_graph(graph, adj):
+def plot_graph(graph):
     """ Use the package networkx to produce a diagrammatic plot of the graph, with
     the nodes in the graph colored according to their current labels.
 
