@@ -154,33 +154,43 @@ def plot_graph(graph, adj):
 # In[12]:
 
 
-def whispers(descriptors, iterations, threshold, names = None, path_files = None, max_size = None):       
+def whispers(people, max_size = None, path_files = None):       
     """ 
         Parameters
         ----------
 
-        descriptors : numpy.ndarray(N, M)
-            The descriptor vector for each N pictures - len of M for each
+        people : dict
+            Full dictionary containing all the people
 
-        iterations : int
-            The number of times the Whispers algorithm should iterate
-
-        threshold : int
-            The value at which to determine if two pictures are the same or not
+        max_size(optional): int,  > 2 works better
+            The max size of a Friend group
             
-        names: list[str] - len = N
-            The names of the people
-            
-        path_files = list[str] - len = N
+        path_files(optional) = list[str] - len = N
             Contains the path to the photos of the N people
-            
-        
-        max_size = int
-            The max number of people per friend group. Give > 2
             
         """
     
-    N = descriptors.shape[0]
+    iterations = 5000
+    threshold = 0.42
+    
+    
+    L = len(people)
+  
+    W = 0
+    for i in people.keys():
+        W = people[i].descriptor_vector.shape[0]
+        
+        
+    descriptors = np.zeros((L,W))
+    names = []
+    for i,j in enumerate(people.keys()):
+        descriptors[i,:] = people[j].descriptor_vector
+        names.append(people[j].name)
+    
+    
+    
+    
+    N = L
     
     adj = np.zeros((N,N))
 
@@ -336,7 +346,7 @@ def whispers(descriptors, iterations, threshold, names = None, path_files = None
     for i in sorted_nodes:
         
         if(i.label != prev):
-            if count > 1:
+            if count > 0:
                 print("\n")
                 print("Group:", num, ",   Number of people:", count)
                 
@@ -372,6 +382,15 @@ def whispers(descriptors, iterations, threshold, names = None, path_files = None
     #group_list.append(sorted_nodes[len(sorted_nodes) - 1].Name)
     for j in group_list:
         print(j.Name)
+        #if j.file_path != None:
+            #pic = plt.imread(j.file_path)
+            #fig, ax = plt.subplots()
+            #ax.imshow(pic)
+    
+    print("\n")
+    #print("Loners:", len(loner))
+    #for j in loner:
+        #print(j.Name)
         #if j.file_path != None:
             #pic = plt.imread(j.file_path)
             #fig, ax = plt.subplots()
