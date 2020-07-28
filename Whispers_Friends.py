@@ -154,13 +154,16 @@ def plot_graph(graph):
 # In[12]:
 
 
-def whispers(people, max_size = None, path_files = None):       
+def whispers(people, threshold, max_size = None, path_files = None):       
     """ 
         Parameters
         ----------
 
         people : dict
             Full dictionary containing all the people
+            
+        Threshold: float
+            Threshold for similarity
 
         max_size(optional): int,  > 2 works better
             The max size of a Friend group
@@ -171,7 +174,6 @@ def whispers(people, max_size = None, path_files = None):
         """
     
     iterations = 5000
-    threshold = 0.42
     
     
     L = len(people)
