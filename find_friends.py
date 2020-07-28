@@ -30,10 +30,10 @@ def find_friends(k, lonely_person_name, lonely_people):
 #You make me very sad.
 
 #Very sad indeed.
+    database = lonely_people.database.copy()
+    lonely_person = database[lonely_person_name]
 
-    lonely_person = lonely_people.database[lonely_person_name]
-
-    del lonely_people.database[lonely_person_name]
+    del database[lonely_person_name]
 
     """
     print('(N) - Number of other users: '
@@ -42,9 +42,9 @@ def find_friends(k, lonely_person_name, lonely_people):
           + np.array(list(lonely_people.database.values().descriptor_vector)).shape)
     """
 
-    names = np.array(list(lonely_people.database.keys()))
+    names = np.array(list(database.keys()))
     # print('names initialized')
-    profiles = np.array(list(lonely_people.database.values()))
+    profiles = np.array(list(database.values()))
     # print('profiles initialized')
     answers = np.ndarray(shape=(len(names), len(lonely_person.descriptor_vector)))
     # print('answers initialized')
