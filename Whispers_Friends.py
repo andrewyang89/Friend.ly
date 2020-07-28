@@ -17,7 +17,7 @@ from matplotlib.patches import Rectangle
 import numpy as np
 
 
-
+ 
 
 def cos_dist(d1, d2):
     """
@@ -40,6 +40,7 @@ def cos_dist(d1, d2):
    #print(M)
     d2 = d2.reshape(M, 1)
     cos = d1 @ d2 / (np.linalg.norm(d1) * np.linalg.norm(d2))
+    
     return 1 - cos
 
 
