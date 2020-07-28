@@ -107,6 +107,18 @@ class Database():
         self.database.update(loaded_db)
     
 
+    def remove_profile(self, name):
+        """
+        Remove person from database
+
+        Parameters
+        ----------
+        name : str
+            name of person to remove from database
+        """
+        del self.database[name]
+    
+
     @property
     def names(self):
         return sorted(list(self.database.keys()))
