@@ -17,6 +17,7 @@ from matplotlib.patches import Rectangle
 import numpy as np
 
 
+
  
 
 def cos_dist(d1, d2):
@@ -153,7 +154,7 @@ def plot_graph(graph, adj):
 # In[12]:
 
 
-def whispers(descriptors, iterations, threshold, names = None, path_files = None):       
+def whispers(descriptors, iterations, threshold, names = None, path_files = None, max_size = None):       
     """ 
         Parameters
         ----------
@@ -172,6 +173,10 @@ def whispers(descriptors, iterations, threshold, names = None, path_files = None
             
         path_files = list[str] - len = N
             Contains the path to the photos of the N people
+            
+        
+        max_size = int
+            The max number of people per friend group. Give > 2
             
         """
     
@@ -265,23 +270,61 @@ def whispers(descriptors, iterations, threshold, names = None, path_files = None
     
     
     
-    #print total number of unique people
+
+    
+    
+    sorted_nodes = sorted(all_nodes, key = lambda Node: Node.label)
+    
+    
+    prev = sorted_nodes[0].label
+    count = 0
+    
+    prev_label = -1
+    new_label = -1
+    
+    
+    #print(sorted_node[:].label)
+    
+    
+    if max_size != None:
+        for i in range(len(sorted_nodes)):
+            if sorted_nodes[i].label == prev_label:
+                sorted_nodes[i].label = new_label
+            
+            
+            if sorted_nodes[i].label == prev:
+                count+=1
+            else:
+                count = 1
+            
+            
+            
+            if count == max_size:
+                prev_label = sorted_nodes[i].label
+                new_label = np.random.randint(50,100)
+                count = 0
+            
+                prev = new_label
+            else:
+                prev = sorted_nodes[i].label
+            
+            
+    if sorted_nodes[len(sorted_nodes) - 1].label == prev_label:
+        sorted_nodes[len(sorted_nodes) - 1].label = new_label
+        
+    
+    
+    plot_graph(tuple(sorted_nodes))
     total = set()
     for i in range(N):
        # print(all_nodes[i].label)
-        total.add(all_nodes[i].label)
+        total.add(sorted_nodes[i].label)
 
 
-    
-    
-    #Plot graph
-    
-    
     print("total number of friend groups:", len(total))  
     
-    plot_graph(tuple(all_nodes), adj)
+ 
     
-    sorted_nodes = sorted(all_nodes, key = lambda Node: Node.label)
 
     prev = sorted_nodes[0].label
     num = 1
@@ -334,14 +377,10 @@ def whispers(descriptors, iterations, threshold, names = None, path_files = None
             #fig, ax = plt.subplots()
             #ax.imshow(pic)
     
-    print("\n")
-    print("Loners:", len(loner))
-    for j in loner:
-        print(j.Name)
-        #if j.file_path != None:
-            #pic = plt.imread(j.file_path)
-            #fig, ax = plt.subplots()
-            #ax.imshow(pic)
+
+    
+
+
 
     
 
