@@ -43,16 +43,16 @@ def find_friends(k, lonely_person_name, lonely_people):
     """
 
     names = np.array(list(lonely_people.database.keys()))
-    print('names initialized')
+    # print('names initialized')
     profiles = np.array(list(lonely_people.database.values()))
-    print('profiles initialized')
+    # print('profiles initialized')
     answers = np.ndarray(shape=(len(names), len(lonely_person.descriptor_vector)))
-    print('answers initialized')
+    # print('answers initialized')
     for i in range(len(answers)):
         answers[i] = profiles[i].descriptor_vector
-    print('answers filled')
+    # print('answers filled')
 
-    print('(D, N) - Shape of transposition: ' + answers.T.shape)
+    # print('(D, N) - Shape of transposition: ' + str(answers.T.shape))
 
     cos = np.matmul(lonely_person.descriptor_vector, answers.T)
 
