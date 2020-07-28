@@ -129,7 +129,7 @@ def plot_graph(graph):
     # indicates that an egde is present between Node-i and Node-j. Because the edges are 
     # undirected, the adjacency matrix must be symmetric, thus we only look ate the triangular
     # upper-half of the entries to avoid adding redundant nodes/edges
-    g.add_edges_from(zip(*np.where(np.triu(adj) > 0)))
+    #g.add_edges_from(zip(*np.where(np.triu(adj) > 0)))
 
     # we want to visualize our graph of nodes and edges; to give the graph a spatial representation,
     # we treat each node as a point in 2D space, and edges like compressed springs. We simulate
