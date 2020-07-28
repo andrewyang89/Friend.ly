@@ -2,6 +2,8 @@ import numpy as np
 import re, string
 from collections import Counter
 from database import Database
+from recognize_speech import recognize_speech_record
+
 
 db = Database()
 num_people = 10
@@ -129,19 +131,25 @@ def compute_descriptors(all_entries):
 
     return tf_idf
 
-def new_person():
+def new_person(db):
     names = db.names
+    # contacts = db.contacts
     entries = db.biographies
     new_name = input("Please enter your name: ")
+    # new_contact = input("Please enter your contact")
     # connect to audio to text file
-    new_entry = input("Tell us about yourself: ")
+    new_entry = recognize_speech_record("Tell us a bit about yourself: ")
     names.append(new_name)
+    # contacts.append(new_contact)
     entries.append(new_entry)
 
     descriptors = compute_descriptors(entries)
     db.add_and_update_profiles(names, entries, descriptors)
 
-for i in range(num_people):
-    new_person()
+# for i in range(num_people):
+#     new_person()
+#
+# db.save('loaded_10_people.pkl')
 
-db.save('loaded_10_people.pkl')
+# db.load('loaded_10_people.pkl')
+# print(db.names)
