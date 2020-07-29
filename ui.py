@@ -25,7 +25,10 @@ class UI:
         entries.append(new_entry)
 
         descriptors = compute_descriptors(entries)
+        print ("Taking a picture. Smile!")
+        pic = camera.take_picture()
         self.db.add_and_update_profiles(names, entries, descriptors)
+        self.db.update_one_profile(new_picture=pic)
 
 
     def user_prompt(self, demomode=False):
