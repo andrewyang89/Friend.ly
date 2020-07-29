@@ -154,7 +154,7 @@ def plot_graph(graph):
 # In[12]:
 
 
-def whispers(people, threshold, max_size = None, path_files = None):       
+def whispers(people, threshold = 0.78, max_size = None, path_files = None):       
     """ 
         Parameters
         ----------
@@ -162,7 +162,7 @@ def whispers(people, threshold, max_size = None, path_files = None):
         people : dict
             Full dictionary containing all the people
             
-        Threshold: float
+        Threshold(optional): float
             Threshold for similarity
 
         max_size(optional): int,  > 2 works better
