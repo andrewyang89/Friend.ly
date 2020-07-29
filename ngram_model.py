@@ -161,11 +161,14 @@ def story(model):
     output = generate_text(lm, 11, 500)
     punctuation = ".,!?';...''``'s"
     words = output.split()
-
+    quotes = "'''```"
     for n, word in enumerate(words):
         if word in punctuation:
             #         print(words[n-1])
             words[n - 1] += word
+            words.pop(n)
+        if word in quotes:
+            print(word)
             words.pop(n)
 
     cleaned_words = " ".join(words)
