@@ -217,5 +217,4 @@ class UI:
                 print("\n------------------------------")
                 print("\nPlease input a valid response.")
                 print("\n------------------------------")
-
-            self.user_prompt(True)
+                self.user_prompt(True)
