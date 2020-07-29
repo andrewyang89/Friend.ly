@@ -1,5 +1,6 @@
 import re, string
 import numpy as np
+import nltk
 from collections import Counter
 
 punc_regex = re.compile('[{}]'.format(re.escape(string.punctuation + '’')))
@@ -148,5 +149,12 @@ def summarize_doc(name, db, bio_length=10):
     person = db.names.index(name)
     name = db.names[person]
     tf_idfs, vocab = get_tf_idfs(name, entries)
-    max_indices = (-tf_idfs[person]).argsort()[:bio_length]
-    print_bio(name, [vocab[x] for x in max_indices])
+    max_indices = (-tf_idfs[person]).argsort()
+    nouns = [word for (word, pos) in nltk.pos_tag(nltk.word_tokenize(db.biographies[person])) if pos[0] == 'N']
+    bio = []
+    for word in [vocab[x] for x in max_indices]:
+        if len(bio) >= min(bio_length, len(nouns)):
+            break
+        if word in nouns:
+            bio.append(word)
+    print_bio(name, bio)
