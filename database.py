@@ -79,6 +79,32 @@ class Database():
             else:
                 self.database[name] = Profile(name, biography=bio, descriptor_vector=vec)
     
+    def update_one_profile(self, name, new_bio='', new_picture=None, new_descriptor_vec=None, new_positivity_score=None):
+        """
+        Update one person's information in database
+
+        Parameters
+        ----------
+        name : str
+            person to update information for
+        new_bio : str
+            (optional) updated person's bio
+        new_picture : ??
+            (optional) updated person's picture
+        new_descriptor_vec : numpy.ndarray
+            (optional) updated person's descriptor vector
+        new_positivity_score : float
+            (optional) updated person's positivity score
+        """
+        if new_bio:
+            self.database[name].biography = new_bio
+        if new_picture:
+            self.database[name].picture = new_picture
+        if new_descriptor_vec:
+            self.database[name].descriptor_vector = new_descriptor_vec
+        if new_positivity_score:
+            self.database[name].positivity_score = new_positivity_score
+    
     
     def save(self, filename):
         """
