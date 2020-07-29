@@ -32,34 +32,55 @@ class UI:
 
         if demomode:
 
-            command = input("\n-----------\nDEMO ACTIVE\n-----------\n\nWhat would you like to demo?\n\n0: Sign In or Create a Profile\n1: Find a new best friend\n2: Have a practice conversation\n3: Find a group\n4: Quit\n\n(Please enter an integer from 0 to 4)\n\n")
+            print("\n-----------")
+            print("\nDEMO ACTIVE")
+            print("\n-----------")
+            print("\n\nWhat would you like to demo?\n")
+            print("\n0: Sign In or Create a Profile")
+            print("\n1: Find a New Best Friend")
+            print("\n2: Have a Practice Conversation")
+            print("\n3: Find a Group")
+            print("\n4: Quit\n")
+            command = input("\n(Please enter an integer from 0 to 4)\n\n")
 
             if command == '0':
 
-                sign_in = input("\n----------------------------------------\nDo you have a preexisting profile? [y/n]\n----------------------------------------\n\n")
+                print("\n----------------------------------------")
+                print("\nDo you have a preexisting profile? [y/n]")
+                sign_in = input("\n----------------------------------------\n\n")
 
                 if sign_in == "y" or sign_in == "yes":
 
-                    self.name = input("\n------------------\nWhat is your name?\n------------------\n\n")
+                    print("\n------------------")
+                    print("\nWhat is your name?")
+                    self.name = input("\n------------------\n\n")
 
                     if self.name not in self.db.names:
 
-                        confirm = input("\n-------------------------------------------------------------------------------------------------------\nThat name doesn't appear to be associated with an account. Are you sure you entered it correctly? [y/n]\n-------------------------------------------------------------------------------------------------\n\n")
+                        print("\n-------------------------------------------------------------------------------------------------------")
+                        print("\nThat name doesn't appear to be associated with an account. Are you sure you entered it correctly? [y/n]")
+                        confirm = input("\n-------------------------------------------------------------------------------------------------\n\n")
 
                         if confirm == "y" or confirm == "yes":
 
                             self.forgetful_new_person(self.db, name)
-                            print("\n----------------------------------------------------------------------------------------------------------------------\nFound you! And I definitely didn't just make a new profile using the information you gave because you are incompetent.\n----------------------------------------------------------------------------------------------------------------------\n")
+                            print("\n----------------------------------------------------------------------------------------------------------------------")
+                            print("\nFound you! And I definitely didn't just make a new profile using the information you gave because you are incompetent.")
+                            print("\n----------------------------------------------------------------------------------------------------------------------\n")
 
                         elif confirm == "n" or confirm == "no":
 
-                            print("\n----------------------------------\nRedirecting you to the homepage...\n----------------------------------\n")
+                            print("\n----------------------------------")
+                            print("\nRedirecting you to the homepage...")
+                            print("\n----------------------------------\n")
                             self.user_prompt(True)
 
                         self.db.save('loaded_10_people.pkl')
 
                     else:
-                        print("\n----------------\nLOGIN SUCCESSFUL\n----------------\n")
+                        print("\n----------------")
+                        print("\nLOGIN SUCCESSFUL")
+                        print("\n----------------\n")
 
                 elif sign_in == "n" or sign_in == "no":
 
@@ -69,15 +90,21 @@ class UI:
 
                 else:
 
-                    print("\n------------------------------\nPlease input a valid response.\n------------------------------")
+                    print("\n------------------------------")
+                    print("\nPlease input a valid response.")
+                    print("\n------------------------------\n")
 
                 self.user_prompt(True)
 
             elif command == '1':
 
                 similar_name = str(find_friends(1, self.name, self.db)[0][0])
-                print("\n" + "-" * (25 + len(similar_name)) + "\nYour most similar match: " + similar_name + "\n" + "-" * (25 + len(similar_name)) + "\n")
-                rating = input("\n-------------------------------------------------------\nSo, how much of a stalker are you? (On a scale of 1-10)\n-------------------------------------------------------\n\n")
+                print("\n" + "-" * (25 + len(similar_name)))
+                print("\nYour most similar match: " + similar_name)
+                print("\n" + "-" * (25 + len(similar_name)) + "\n")
+                print("\n-------------------------------------------------------")
+                print("\nSo, how much of a stalker are you? (On a scale of 1-10)")
+                rating = input("\n-------------------------------------------------------\n\n")
 
                 """
                 if type(int(rating)) is not int or type(float(rating)) is not float:
@@ -89,19 +116,29 @@ class UI:
 
                 if int(rating) <= 5:
 
-                    print("\n--------------\nSuit yourself.\n--------------\n")
+                    print("\n--------------")
+                    print("\nSuit yourself.")
+                    print("\n--------------\n")
 
                 elif int(rating) > 5 and int(rating) < 10:
 
                     stalkee = self.db.database[similar_name]
-                    print("\n------------------\nHave at it, champ.\n------------------\n")
-                    print("\nName: " + stalkee.name + "\nBiography: " + stalkee.biography + "\nContact: " + stalkee.contact + "\nPositivity Score: " + "0" + "\nPicture: \n")
+                    print("\n------------------")
+                    print("\nHave at it, champ.")
+                    print("\n------------------\n")
+                    print("\nName: " + stalkee.name)
+                    print("\nBiography: " + stalkee.biography)
+                    print("\nContact: " + stalkee.contact)
+                    print("\nPositivity Score: " + "0")
+                    print("\nPicture: \n")
                     #imgplot = plt.imshow(stalkee.picture)
                     #plt.show()
 
                 else:
 
-                    print("\n-----------------------------------------------\nI don't think you'll be needing our help then.\n-----------------------------------------------\n")
+                    print("\n----------------------------------------------")
+                    print("\nI don't think you'll be needing our help then.")
+                    print("\n-----------------------------------------------\n")
 
                 self.user_prompt(True)
 
@@ -110,15 +147,21 @@ class UI:
 
             elif command == '3':
 
-                k = int(input("\n------------------------------------------\nHow many people do you want in your group?\n------------------------------------------\n\n"))
+                print("\n------------------------------------------")
+                print("\nHow many people do you want in your group?")
+                k = int(input("\n------------------------------------------\n\n"))
                 group = find_friends(k, self.name, self.db)
                 group_names = ""
                 for i in range(len(group)-1):
                     group_names += (group[i][0] + ", ")
                 group_names += (group[len(group)-1][0])
                 group_list = group_names.split(", ")
-                print("\n---------------------------" + "-" * len(group_names) + "\nYour most similar matches: " + group_names + "\n---------------------------" + "-" * len(group_names) + "\n")
-                rating = input("\n-------------------------------------------------------\nSo, how much of a stalker are you? (On a scale of 1-10)\n-------------------------------------------------------\n\n")
+                print("\n---------------------------" + "-" * len(group_names))
+                print("\nYour most similar matches: " + group_names)
+                print("\n---------------------------" + "-" * len(group_names) + "\n")
+                print("\n-------------------------------------------------------")
+                print("\nSo, how much of a stalker are you? (On a scale of 1-10)")
+                rating = input("\n-------------------------------------------------------\n\n")
 
                 """
                 if type(int(rating)) is not int or type(float(rating)) is not float:
@@ -130,20 +173,30 @@ class UI:
 
                 if int(rating) <= 5:
 
-                    print("\n--------------\nSuit yourself.\n--------------\n")
+                    print("\n--------------")
+                    print("\nSuit yourself.")
+                    print("\n--------------\n")
 
                 elif int(rating) > 5 and int(rating) < 10:
 
-                    print("\n------------------\nHave at it, champ.\n------------------\n")
+                    print("\n------------------")
+                    print("\nHave at it, champ.")
+                    print("\n------------------\n")
                     for similar_name in group_list:
                         stalkee = self.db.database[similar_name]
-                        print("\nName: " + stalkee.name + "\nBiography: " + stalkee.biography + "\nContact: " + stalkee.contact + "\nPositivity Score: " + "0" + "\nPicture: \n")
+                        print("\nName: " + stalkee.name)
+                        print("\nBiography: " + stalkee.biography)
+                        print("\nContact: " + stalkee.contact)
+                        print("\nPositivity Score: " + "0")
+                        print("\nPicture: \n")
                         #imgplot = plt.imshow(stalkee.picture)
                         #plt.show()
 
                 else:
 
-                    print("\n-----------------------------------------------\nI don't think you'll be needing our help then.\n-----------------------------------------------\n")
+                    print("\n----------------------------------------------")
+                    print("\nI don't think you'll be needing our help then.")
+                    print("\n----------------------------------------------\n")
 
                 self.user_prompt(True)
 
@@ -152,10 +205,14 @@ class UI:
 
             elif command == '4':
 
+                print("\n--------")
                 print("\nGoodbye.")
+                print("\n--------")
 
             else:
 
-                print("\n------------------------------\nPlease input a valid response.\n------------------------------")
+                print("\n------------------------------")
+                print("\nPlease input a valid response.")
+                print("\n------------------------------")
 
             self.user_prompt(True)
