@@ -4,6 +4,7 @@ import camera
 from collections import Counter
 from database import Database
 from recognize_speech import recognize_speech_record
+from predict_emotion import take_image_classify_emotion
 
 
 num_people = 10
@@ -146,9 +147,9 @@ def new_person(db):
     descriptors = compute_descriptors(entries)
 
     print ("Taking a picture. Smile!")
-    pic = camera.take_picture()
+    pic, positivity_score = take_image_classify_emotion()
     db.add_and_update_profiles(names, entries, descriptors)
-    db.update_one_profile(new_name,new_picture=pic)
+    db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score)
 
 # for i in range(num_people):
 #     new_person()
