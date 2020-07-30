@@ -16,6 +16,7 @@ from ngram_model import story
 import pickle
 from predict_sentiment import predict_sentiment
 import predict_emotion
+from predict_emotion import take_image_classify_emotion
 
 with open('fairytale.pkl', 'rb') as file:
     lm = pickle.load(file)
@@ -53,8 +54,8 @@ class UI:
 
         print ("Taking a picture. Smile!")
         pic, positivity_score = take_image_classify_emotion()
-        db.add_and_update_profiles(names, entries, descriptors)
-        db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
+        self.db.add_and_update_profiles(names, entries, descriptors)
+        self.db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
 
 
     def user_prompt(self, demomode=False):
@@ -287,7 +288,7 @@ class UI:
                 print("\n\n--------")
                 print("\nMake a face! You're on camera!")
                 pic, prediction = predict_emotion.take_image_classify_emotion()
-            
+
             elif command == '7':
                 print("\n\n--------")
                 print("\nAbout Yourself: {}".format(self.db.database[self.name].short_bio))
