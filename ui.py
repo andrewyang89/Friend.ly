@@ -129,9 +129,10 @@ class UI:
 
                 elif int(rating) > 5 and int(rating) < 10:
                 """
+                
                 print("\n-----------------------------------")
                 print("\nWould you like to learn more? [y/n]")
-                resp = input("\n-----------------------------------\n\n")
+                confirm = input("\n-----------------------------------\n\n")
 
                 if confirm == "y" or confirm == "yes":
 
