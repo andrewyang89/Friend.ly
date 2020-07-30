@@ -284,6 +284,7 @@ class UI:
 
             elif command == '6':
                 print("\n\n--------")
+                print("\nMake a face! You're on camera!")
                 pic, prediction = predict_emotion.take_image_classify_emotion()
 
             elif command == '7':
