@@ -35,7 +35,7 @@ class Profile():
 
 
     def __repr__(self):
-        return "Name: {}\nBiography: {}\nDescriptor Vector: {}".format(self.name, self.biography, self.descriptor_vector)
+        return "Name: {}\nBiography: {}\nDescriptor Vector: {}\nShort Bio: {}".format(self.name, self.biography, self.descriptor_vector, self.short_bio)
 
 class Database():
     def __init__(self, names=[], biographies=[], descriptor_vectors=[]):
@@ -72,14 +72,13 @@ class Database():
         descriptor_vectors : List[numpy.ndarray]
             descriptor vectors associated to names
         """
-        for name, bio, vec, short_b in zip(names, biographies, descriptor_vectors, short_bio):
+        for name, bio, vec in zip(names, biographies, descriptor_vectors):
             if name in self.database:
                 self.database[name].name = name
                 self.database[name].biography = bio
                 self.database[name].descriptor_vector = vec
-                self.database[name].short_bio = short_b
             else:
-                self.database[name] = Profile(name, biography=bio, descriptor_vector=vec, short_bio=short_b)
+                self.database[name] = Profile(name, biography=bio, descriptor_vector=vec)
     
     def update_one_profile(self, name, new_bio='', new_picture=None, new_descriptor_vec=None, new_positivity_score=None, new_short_bio=''):
         """
@@ -108,6 +107,8 @@ class Database():
             self.database[name].descriptor_vector = new_descriptor_vec
         if new_positivity_score is not None:
             self.database[name].positivity_score = new_positivity_score
+        if new_short_bio:
+            self.database[name].short_bio = new_short_bio
     
     
     def save(self, filename):
