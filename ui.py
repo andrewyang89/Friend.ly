@@ -6,6 +6,11 @@ import matplotlib.image as mpimage
 from recognize_speech import recognize_speech_record
 from input_to_descriptors import compute_descriptors
 from Whispers_Friends import whispers
+from ngram_model import story
+import pickle
+
+with open('fairytale.pkl', 'rb') as file:
+    lm = pickle.load(file)
 
 class UI:
 
@@ -15,21 +20,22 @@ class UI:
         self.logged_in = False
 
     def forgetful_new_person(self, db,new_name):
-        names = self.db.names
-        # contacts = self.db.contacts
-        entries = self.db.biographies
+        names = db.names
+        # contacts = db.contacts
+        entries = db.biographies
+        # new_contact = input("Please enter your contact")
         # connect to audio to text file
-        new_entry = recognize_speech_record("Tell us a bit about yourself so that we can try to find your account: ")
-        #actually do the comparison and find the most similar
+        new_entry = recognize_speech_record("Tell us a bit about yourself: ")
         names.append(new_name)
         # contacts.append(new_contact)
         entries.append(new_entry)
 
         descriptors = compute_descriptors(entries)
+
         print ("Taking a picture. Smile!")
-        pic = camera.take_picture()
-        self.db.add_and_update_profiles(names, entries, descriptors)
-        self.db.update_one_profile(new_picture=pic)
+        pic, positivity_score = take_image_classify_emotion()
+        db.add_and_update_profiles(names, entries, descriptors)
+        db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
 
 
     def user_prompt(self, demomode=False):
@@ -44,8 +50,8 @@ class UI:
             print("\n1: Find a New Best Friend")
             print("\n2: Have a Practice Conversation")
             print("\n3: Find a Group")
-            print("\n4: Quit")
-            print("\n5: Show all Friend Groups\n")
+            print("\n4: View All Friend Groups")
+            print("\n5: Quit")
             command = input("\n(Please enter an integer from 0 to 4)\n\n")
 
             if command == '0':
@@ -107,17 +113,19 @@ class UI:
                 print("\n" + "-" * (25 + len(similar_name)))
                 print("\nYour most similar match: " + similar_name)
                 print("\n" + "-" * (25 + len(similar_name)) + "\n")
+
+                """
                 print("\n-------------------------------------------------------")
                 print("\nSo, how much of a stalker are you? (On a scale of 1-10)")
                 rating = input("\n-------------------------------------------------------\n\n")
 
-                """
-                if type(int(rating)) is not int or type(float(rating)) is not float:
 
-                    print("\n------------------------------\nPlease input a valid response.\n------------------------------")
+                #if type(int(rating)) is not int or type(float(rating)) is not float:
 
-                Let's just pretend that all answers will be valid casts.
-                """
+                    #print("\n------------------------------\nPlease input a valid response.\n------------------------------")
+
+                #Let's just pretend that all answers will be valid casts.
+
 
                 if int(rating) <= 5:
 
@@ -144,11 +152,44 @@ class UI:
                     print("\n----------------------------------------------")
                     print("\nI don't think you'll be needing our help then.")
                     print("\n-----------------------------------------------\n")
+                """
+                print("\n-----------------------------------")
+                print("\nWould you like to learn more? [y/n]")
+                resp = input("\n-----------------------------------\n\n")
+
+                if confirm == "y" or confirm == "yes":
+
+                    stalkee = self.db.database[similar_name]
+                    print("\n------------------")
+                    print("\nHave at it, champ.")
+                    print("\n------------------")
+                    print("\nName: " + stalkee.name)
+                    print("\nBiography: " + stalkee.biography)
+                    print("\nContact: " + stalkee.contact)
+                    print("\nPositivity Score: " + stalkee.positivity_score)
+                    print("\nPicture: \n")
+                    imgplot = plt.imshow(stalkee.picture)
+                    plt.show()
+
+                elif confirm == "n" or confirm == "no":
+
+                    print("\n--------------")
+                    print("\nSuit yourself.")
+                    print("\n--------------\n")
+
+                else:
+
+                    print("\n------------------------------")
+                    print("\nPlease input a valid response.")
+                    print("\n------------------------------\n")
 
                 self.user_prompt(True)
 
             elif command == '2':
-                pass
+
+                print("\nLet me tell you a story:\n\n")
+                print(story(lm))
+                self.user_prompt(True)
 
             elif command == '3':
 
@@ -205,20 +246,16 @@ class UI:
 
                 self.user_prompt(True)
 
-
-
-
             elif command == '4':
+                print("\n\n--------")
+                whispers(self.db.database)
+
+            elif command == '5':
 
                 print("\n--------")
                 print("\nGoodbye.")
                 print("\n--------")
 
-            elif command == '5':
-                print("\n\n--------")
-                whispers(self.db.database)
-                
-            
             else:
 
                 print("\n------------------------------")
