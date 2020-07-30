@@ -105,13 +105,13 @@ class UI:
                             self.forgetful_new_person(self.db, self.name)
                             print("\n----------------------------------------------------------------------------------------------------------------------")
                             print("\nFound you! And I definitely didn't just make a new profile using the information you gave because you are incompetent.")
-                            print("\n----------------------------------------------------------------------------------------------------------------------\n")
+                            print("\n----------------------------------------------------------------------------------------------------------------------")
 
                         elif confirm == "n" or confirm == "no":
 
                             print("\n----------------------------------")
                             print("\nRedirecting you to the homepage...")
-                            print("\n----------------------------------\n")
+                            print("\n----------------------------------")
                             self.user_prompt(True)
 
                         self.db.save('celebrities.pkl')
@@ -119,7 +119,7 @@ class UI:
                     else:
                         print("\n----------------")
                         print("\nLOGIN SUCCESSFUL")
-                        print("\n----------------\n")
+                        print("\n----------------")
 
                 elif sign_in == "n" or sign_in == "no":
 
@@ -131,8 +131,9 @@ class UI:
 
                     print("\n------------------------------")
                     print("\nPlease input a valid response.")
-                    print("\n------------------------------\n")
+                    print("\n------------------------------")
 
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
 
             elif command == '1':
@@ -203,20 +204,22 @@ class UI:
 
                     print("\n--------------")
                     print("\nSuit yourself.")
-                    print("\n--------------\n")
+                    print("\n--------------")
 
                 else:
 
                     print("\n------------------------------")
                     print("\nPlease input a valid response.")
-                    print("\n------------------------------\n")
+                    print("\n------------------------------")
 
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
 
             elif command == '2':
 
                 print("\nLet me tell you a story:\n\n")
                 print(story(lm))
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
 
             elif command == '3':
@@ -297,20 +300,21 @@ class UI:
 
                     print("\n--------------")
                     print("\nSuit yourself.")
-                    print("\n--------------\n")
+                    print("\n--------------")
 
                 else:
 
                     print("\n------------------------------")
                     print("\nPlease input a valid response.")
-                    print("\n------------------------------\n")
+                    print("\n------------------------------")
 
-
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
 
             elif command == '4':
                 print("\n\n--------")
                 whispers(self.db.database)
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
 
 
@@ -318,13 +322,20 @@ class UI:
                 print("\n\n--------")
                 bio = self.db.database[self.name].biography
                 sentiment = predict_sentiment(bio, glove_model)
-                if sentiment < 0.4:
-                    print("Your description seems a little negative")
-                elif sentiment < 0.6:
-                    print("Your description seems neutral")
-                else:
-                    print("Your description seems positive!")
 
+                if sentiment < 0.4:
+
+                    print("\nYour description seems negative.")
+
+                elif sentiment < 0.6:
+
+                    print("\nYour description seems neutral.")
+
+                else:
+
+                    print("\nYour description seems positive.")
+
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
 
 
@@ -332,6 +343,7 @@ class UI:
                 print("\n\n--------")
                 print("\nMake a face! You're on camera!")
                 pic, prediction = predict_emotion.take_image_classify_emotion()
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
 
 
@@ -340,13 +352,23 @@ class UI:
                 print("\nAbout Yourself: {}".format(self.db.database[self.name].short_bio))
                 see_another_bio = input("\n\nWould you like to see someone else's shortened biography? [y/n]")
                 if see_another_bio in ['y', 'yes', 'Y', 'Yes', 'YES']:
+
                     bio_person = input('\nWhose Biography?')
+
                     if bio_person in self.db.database:
+
                         print("\nAbout {}: {}".format(bio_person, self.db.database[bio_person].short_bio))
+
                     else:
+
                         print("\nSorry, the person you said is not in the database")
+
+                    cont = input("\nPress 'Enter' to return to the menu.\n")
                     self.user_prompt(True)
+
                 else:
+
+                    cont = input("\nPress 'Enter' to return to the menu.\n")
                     self.user_prompt(True)
 
             elif command == '8':
@@ -358,4 +380,5 @@ class UI:
                 print("\n------------------------------")
                 print("\nPlease input a valid response.")
                 print("\n------------------------------")
+                cont = input("\nPress 'Enter' to return to the menu.\n")
                 self.user_prompt(True)
