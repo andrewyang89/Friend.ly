@@ -77,7 +77,7 @@ def take_image_classify_emotion():
 
     ax.set_title(f"Predicted:{classes[prediction]}")
 
-    return prediction
+    return pic, prediction
 
 def load_image_classify_emotion(path):
     """
@@ -115,4 +115,4 @@ def load_image_classify_emotion(path):
 
     ax.set_title(f"Predicted:{classes[prediction]}")
 
-    return prediction
+    return pic, prediction
