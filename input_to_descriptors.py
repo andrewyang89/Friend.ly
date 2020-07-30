@@ -150,7 +150,7 @@ def new_person(db):
     print ("Taking a picture. Smile!")
     pic, positivity_score = take_image_classify_emotion()
     db.add_and_update_profiles(names, entries, descriptors)
-    db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
+    db.update_one_profile(new_name,new_picture=pic,new_positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
 
 # for i in range(num_people):
 #     new_person()

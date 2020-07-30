@@ -3,7 +3,7 @@ from pathlib import Path
 from gensim.models import KeyedVectors
 from gensim.scripts.glove2word2vec import glove2word2vec
 
-from .sentiment_analysis import Model
+from sentiment_analysis import Model
 import numpy as np
 
 def run(text):

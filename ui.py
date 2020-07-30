@@ -17,6 +17,10 @@ import pickle
 from predict_sentiment import predict_sentiment
 import predict_emotion
 from predict_emotion import take_image_classify_emotion
+from bio_summarization import summarize_doc
+import nltk
+nltk.download('averaged_perceptron_tagger')
+
 
 with open('fairytale.pkl', 'rb') as file:
     lm = pickle.load(file)
@@ -36,8 +40,9 @@ class UI:
 
     def __init__(self):
         self.db = Database()
-        self.db.load('loaded_10_people.pkl')
+        self.db.load('celebrities.pkl')
         self.logged_in = False
+        save_camera_config(0, exposure=0.2)
 
     def forgetful_new_person(self, db,new_name):
         names = db.names
@@ -71,8 +76,8 @@ class UI:
             print("\n2: Lift My Spirits!")
             print("\n3: Find a Group")
             print("\n4: View All Friend Groups")
-            print("\n5: Rate the sentiment of my description")
-            print("\n6: Rate the emotions on my face")
+            print("\n5: Rate the Sentiment of my Description")
+            print("\n6: Rate the Emotions of my Face")
             print("\n7: Get My Shortened Biography")
             print("\n8: Quit")
             command = input("\n(Please enter an integer from 0 to 8)\n\n")
@@ -97,7 +102,7 @@ class UI:
 
                         if confirm == "y" or confirm == "yes":
 
-                            self.forgetful_new_person(self.db, name)
+                            self.forgetful_new_person(self.db, self.name)
                             print("\n----------------------------------------------------------------------------------------------------------------------")
                             print("\nFound you! And I definitely didn't just make a new profile using the information you gave because you are incompetent.")
                             print("\n----------------------------------------------------------------------------------------------------------------------\n")
@@ -109,7 +114,7 @@ class UI:
                             print("\n----------------------------------\n")
                             self.user_prompt(True)
 
-                        self.db.save('loaded_10_people.pkl')
+                        self.db.save('celebrities.pkl')
 
                     else:
                         print("\n----------------")
@@ -119,7 +124,7 @@ class UI:
                 elif sign_in == "n" or sign_in == "no":
 
                     new_person(self.db)
-                    self.db.save('loaded_10_people.pkl')
+                    self.db.save('celebrities.pkl')
                     self.name = self.db.names[-1]
 
                 else:
@@ -178,7 +183,7 @@ class UI:
                 """
                 print("\n-----------------------------------")
                 print("\nWould you like to learn more? [y/n]")
-                resp = input("\n-----------------------------------\n\n")
+                confirm = input("\n-----------------------------------\n\n")
 
                 if confirm == "y" or confirm == "yes":
 
@@ -188,11 +193,11 @@ class UI:
                     print("\n------------------")
                     print("\nName: " + stalkee.name)
                     print("\nBiography: " + stalkee.biography)
-                    print("\nContact: " + stalkee.contact)
-                    print("\nPositivity Score: " + stalkee.positivity_score)
-                    print("\nPicture: \n")
-                    imgplot = plt.imshow(stalkee.picture)
-                    plt.show()
+#                     print("\nContact: " + stalkee.contact)
+#                     print("\nPositivity Score: " + stalkee.positivity_score)
+#                     print("\nPicture: \n")
+#                     imgplot = plt.imshow(stalkee.picture)
+#                     plt.show()
 
                 elif confirm == "n" or confirm == "no":
 
@@ -306,22 +311,29 @@ class UI:
             elif command == '4':
                 print("\n\n--------")
                 whispers(self.db.database)
+                self.user_prompt(True)
+
 
             elif command == '5':
                 print("\n\n--------")
                 bio = self.db.database[self.name].biography
-                sentiment = predict_sentiment(bio)
+                sentiment = predict_sentiment(bio, glove_model)
                 if sentiment < 0.4:
                     print("Your description seems a little negative")
                 elif sentiment < 0.6:
                     print("Your description seems neutral")
                 else:
                     print("Your description seems positive!")
+                
+                self.user_prompt(True)
+
 
             elif command == '6':
                 print("\n\n--------")
                 print("\nMake a face! You're on camera!")
                 pic, prediction = predict_emotion.take_image_classify_emotion()
+                self.user_prompt(True)
+
 
             elif command == '7':
                 print("\n\n--------")
@@ -343,7 +355,6 @@ class UI:
                 print("\n--------")
 
             else:
-
                 print("\n------------------------------")
                 print("\nPlease input a valid response.")
                 print("\n------------------------------")
