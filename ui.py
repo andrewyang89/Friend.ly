@@ -123,9 +123,9 @@ class UI:
 
                 elif sign_in == "n" or sign_in == "no":
 
-                    new_person(self.db)
+                    name = new_person(self.db)
                     self.db.save('celebrities.pkl')
-                    self.name = self.db.names[-1]
+                    self.name = name
 
                 else:
 
@@ -324,7 +324,7 @@ class UI:
                     print("Your description seems neutral")
                 else:
                     print("Your description seems positive!")
-                
+
                 self.user_prompt(True)
 
 
