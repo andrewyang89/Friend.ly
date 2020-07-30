@@ -1,3 +1,8 @@
+from pathlib import Path
+
+import camera
+from gensim.models import KeyedVectors
+from gensim.scripts.glove2word2vec import glove2word2vec
 from input_to_descriptors import new_person
 from database import Database
 from find_friends import find_friends
@@ -6,11 +11,25 @@ import matplotlib.image as mpimage
 from recognize_speech import recognize_speech_record
 from input_to_descriptors import compute_descriptors
 from Whispers_Friends import whispers
+from camera import save_camera_config
 from ngram_model import story
 import pickle
+from predict_sentiment import predict_sentiment
+import predict_emotion
 
 with open('fairytale.pkl', 'rb') as file:
     lm = pickle.load(file)
+
+unzipped_folder = "glove.twitter.27B/"  # ENTER THE PATH TO THE UNZIPPED `glove.twitter.27B` HERE
+
+# use glove2word2vec to convert GloVe vectors in text format into the word2vec text format:
+if not Path('gensim_glove_vectors_200.txt').exists():
+    # assumes you've downloaded and extracted the glove stuff
+    glove2word2vec(glove_input_file=unzipped_folder + "glove.twitter.27B.200d.txt",
+                   word2vec_output_file="gensim_glove_vectors_200.txt")
+
+# read the word2vec txt to a gensim model using KeyedVectors
+glove_model = KeyedVectors.load_word2vec_format("gensim_glove_vectors_200.txt", binary=False)
 
 class UI:
 
@@ -51,8 +70,10 @@ class UI:
             print("\n2: Lift My Spirits!")
             print("\n3: Find a Group")
             print("\n4: View All Friend Groups")
-            print("\n5: Quit")
-            command = input("\n(Please enter an integer from 0 to 4)\n\n")
+            print("\n5: Rate the sentiment of my description")
+            print("\n6: Rate the emotions on my face")
+            print("\n7: Quit")
+            command = input("\n(Please enter an integer from 0 to 7)\n\n")
 
             if command == '0':
 
@@ -251,7 +272,21 @@ class UI:
                 whispers(self.db.database)
 
             elif command == '5':
+                print("\n\n--------")
+                bio = self.db.database[self.name].biography
+                sentiment = predict_sentiment(bio)
+                if sentiment < 0.4:
+                    print("Your description seems a little negative")
+                elif sentiment < 0.6:
+                    print("Your description seems neutral")
+                else:
+                    print("Your description seems positive!")
 
+            elif command == '6':
+                print("\n\n--------")
+                pic, prediction = predict_emotion.take_image_classify_emotion()
+
+            elif command == '7':
                 print("\n--------")
                 print("\nGoodbye.")
                 print("\n--------")
