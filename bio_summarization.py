@@ -127,9 +127,7 @@ def get_tf_idfs(name, entries):
 
 
 def print_bio(name, shortened_bio):
-    print ("About {}:\n".format(name))
-    for word in shortened_bio:
-        print('- ' + word)
+    print(', '.join(shortened_bio))
 
 
 def summarize_doc(name, db, bio_length=10):
