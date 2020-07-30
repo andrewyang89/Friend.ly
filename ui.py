@@ -48,7 +48,7 @@ class UI:
             print("\n\nWhat would you like to demo?\n")
             print("\n0: Sign In or Create a Profile")
             print("\n1: Find a New Best Friend")
-            print("\n2: Have a Practice Conversation")
+            print("\n2: Tell Me a Story")
             print("\n3: Find a Group")
             print("\n4: View All Friend Groups")
             print("\n5: Quit")
