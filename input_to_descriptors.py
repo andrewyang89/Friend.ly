@@ -148,7 +148,7 @@ def new_person(db):
     print ("Taking a picture. Smile!")
     pic = camera.take_picture()
     db.add_and_update_profiles(names, entries, descriptors)
-    db.update_one_profile(new_picture=pic)
+    db.update_one_profile(new_name,new_picture=pic)
 
 # for i in range(num_people):
 #     new_person()

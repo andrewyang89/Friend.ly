@@ -98,11 +98,11 @@ class Database():
         """
         if new_bio:
             self.database[name].biography = new_bio
-        if new_picture:
+        if new_picture is not None:
             self.database[name].picture = new_picture
-        if new_descriptor_vec:
+        if new_descriptor_vec is not None:
             self.database[name].descriptor_vector = new_descriptor_vec
-        if new_positivity_score:
+        if new_positivity_score is not None:
             self.database[name].positivity_score = new_positivity_score
     
     

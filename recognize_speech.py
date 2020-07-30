@@ -18,7 +18,7 @@ def recognize_speech_record(prompt: str) -> str:
     with sr.Microphone() as source:
         print(prompt)
         audio_text = r.listen(source)
-        print("Speech Recognition Started")
+        print("Speech Recognition Stopped")
 
         try:
             # using google speech recognition
