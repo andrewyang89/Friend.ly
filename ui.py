@@ -72,8 +72,9 @@ class UI:
             print("\n4: View All Friend Groups")
             print("\n5: Rate the sentiment of my description")
             print("\n6: Rate the emotions on my face")
-            print("\n7: Quit")
-            command = input("\n(Please enter an integer from 0 to 7)\n\n")
+            print("\n7: Get My Shortened Biography")
+            print("\n8: Quit")
+            command = input("\n(Please enter an integer from 0 to 8)\n\n")
 
             if command == '0':
 
@@ -286,8 +287,22 @@ class UI:
                 print("\n\n--------")
                 print("\nMake a face! You're on camera!")
                 pic, prediction = predict_emotion.take_image_classify_emotion()
-
+            
             elif command == '7':
+                print("\n\n--------")
+                print("\nAbout Yourself: {}".format(self.db.database[self.name].short_bio))
+                see_another_bio = input("\n\nWould you like to see someone else's shortened biography? [y/n]")
+                if see_another_bio in ['y', 'yes', 'Y', 'Yes', 'YES']:
+                    bio_person = input('\nWhose Biography?')
+                    if bio_person in self.db.database:
+                        print("\nAbout {}: {}".format(bio_person, self.db.database[bio_person].short_bio))
+                    else:
+                        print("\nSorry, the person you said is not in the database")
+                    self.user_prompt(True)
+                else:
+                    self.user_prompt(True)
+
+            elif command == '8':
                 print("\n--------")
                 print("\nGoodbye.")
                 print("\n--------")
