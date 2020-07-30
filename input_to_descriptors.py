@@ -1,10 +1,10 @@
 import numpy as np
 import re, string
-import camera
+# import camera
 from collections import Counter
 from database import Database
 from recognize_speech import recognize_speech_record
-from predict_emotion import take_image_classify_emotion
+# from predict_emotion import take_image_classify_emotion
 from bio_summarization import summarize_doc
 
 
@@ -137,7 +137,6 @@ def new_person(db):
     names = db.names
     # contacts = db.contacts
     entries = db.biographies
-    short_bios = [db.database[name].short_bio for name in names]
     new_name = input("Please enter your name: ")
     # new_contact = input("Please enter your contact")
     # connect to audio to text file
@@ -145,14 +144,13 @@ def new_person(db):
     names.append(new_name)
     # contacts.append(new_contact)
     entries.append(new_entry)
-    short_bios.append(summarize_doc(new_name, db))
 
     descriptors = compute_descriptors(entries)
 
     print ("Taking a picture. Smile!")
     pic, positivity_score = take_image_classify_emotion()
-    db.add_and_update_profiles(names, entries, descriptors, short_bios)
-    db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score)
+    db.add_and_update_profiles(names, entries, descriptors)
+    db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
 
 # for i in range(num_people):
 #     new_person()
