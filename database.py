@@ -1,7 +1,7 @@
 import pickle
 
 class Profile():
-    def __init__(self, name, biography=None, contact=None, descriptor_vector=None, picture=None, positivity_score=None):
+    def __init__(self, name, biography=None, contact=None, descriptor_vector=None, picture=None, positivity_score=None, short_bio=''):
         """
         Initialize Profile with initial descriptions
         
@@ -31,6 +31,7 @@ class Profile():
         self.descriptor_vector = descriptor_vector
         self.picture = picture
         self.positivity_score = positivity_score
+        self.short_bio = short_bio
 
 
     def __repr__(self):
@@ -71,15 +72,16 @@ class Database():
         descriptor_vectors : List[numpy.ndarray]
             descriptor vectors associated to names
         """
-        for name, bio, vec in zip(names, biographies, descriptor_vectors):
+        for name, bio, vec, short_b in zip(names, biographies, descriptor_vectors, short_bio):
             if name in self.database:
                 self.database[name].name = name
                 self.database[name].biography = bio
                 self.database[name].descriptor_vector = vec
+                self.database[name].short_bio = short_b
             else:
-                self.database[name] = Profile(name, biography=bio, descriptor_vector=vec)
+                self.database[name] = Profile(name, biography=bio, descriptor_vector=vec, short_bio=short_b)
     
-    def update_one_profile(self, name, new_bio='', new_picture=None, new_descriptor_vec=None, new_positivity_score=None):
+    def update_one_profile(self, name, new_bio='', new_picture=None, new_descriptor_vec=None, new_positivity_score=None, new_short_bio=''):
         """
         Update one person's information in database
 
@@ -95,6 +97,8 @@ class Database():
             (optional) updated person's descriptor vector
         new_positivity_score : float
             (optional) updated person's positivity score
+        new_short_bio : str
+            (optional) updated person's shortened bio
         """
         if new_bio:
             self.database[name].biography = new_bio

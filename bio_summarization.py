@@ -126,10 +126,6 @@ def get_tf_idfs(name, entries):
     return tfs * idf, vocab
 
 
-def print_bio(name, shortened_bio):
-    print(', '.join(shortened_bio))
-
-
 def summarize_doc(name, db, bio_length=10):
     """
     Summarize particular person's biography into keywords
@@ -155,4 +151,4 @@ def summarize_doc(name, db, bio_length=10):
             break
         if word in nouns:
             bio.append(word)
-    print_bio(name, bio)
+    return ', '.join(bio)
