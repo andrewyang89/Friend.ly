@@ -359,3 +359,7 @@ class UI:
                 print("\nPlease input a valid response.")
                 print("\n------------------------------")
                 self.user_prompt(True)
+
+def run():
+    myUI = UI()
+    myUI.user_prompt(True)
