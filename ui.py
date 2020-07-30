@@ -5,7 +5,11 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimage
 from recognize_speech import recognize_speech_record
 from input_to_descriptors import compute_descriptors
+from ngram_model import story
+import pickle
 
+with open('fairytale.pkl', 'rb') as file:
+    lm = pickle.load(file)
 class UI:
 
     def __init__(self):
@@ -162,7 +166,9 @@ class UI:
                 self.user_prompt(True)
 
             elif command == '2':
-                pass
+                print("\nLet me tell you a story:\n\n")
+                print(story(lm))
+                self.user_prompt(True)
 
             elif command == '3':
 

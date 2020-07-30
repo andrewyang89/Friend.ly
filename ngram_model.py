@@ -158,28 +158,26 @@ def train_model(path):
 
 def story(model):
     output = " "
-    output = generate_text(lm, 11, 500)
+    output = generate_text(model, 11, 500)
     punctuation = ".,!?';...''``'s"
+
+    output = output.replace("`", "")
+    output = output.replace("'", "")
     words = output.split()
-    quotes = "'''```"
     for n, word in enumerate(words):
         if word in punctuation:
-            #         print(words[n-1])
             words[n - 1] += word
-            words.pop(n)
-        if word in quotes:
-            print(word)
             words.pop(n)
 
     cleaned_words = " ".join(words)
     final = 0
     for n, char in enumerate(cleaned_words[::-1]):
-        #     print(n, char)
         if char == '.':
             final = n
             break
     # print(final)
     return cleaned_words[:-final]
 
-lm = train_model('./fairytale_train.txt')
-print(story(lm))
+
+# lm = train_model('./fairytale_train.txt')
+# print(story(lm))
