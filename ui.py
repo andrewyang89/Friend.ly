@@ -55,7 +55,7 @@ class UI:
         print ("Taking a picture. Smile!")
         pic, positivity_score = take_image_classify_emotion()
         self.db.add_and_update_profiles(names, entries, descriptors)
-        self.db.update_one_profile(new_name,new_picture=pic,positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
+        self.db.update_one_profile(new_name,new_picture=pic,new_positivity_score=positivity_score, new_short_bio=summarize_doc(new_name, db))
 
 
     def user_prompt(self, demomode=False):
@@ -228,17 +228,18 @@ class UI:
                 print("\n---------------------------" + "-" * len(group_names))
                 print("\nYour most similar matches: " + group_names)
                 print("\n---------------------------" + "-" * len(group_names) + "\n")
+                """
                 print("\n-------------------------------------------------------")
                 print("\nSo, how much of a stalker are you? (On a scale of 1-10)")
                 rating = input("\n-------------------------------------------------------\n\n")
 
-                """
-                if type(int(rating)) is not int or type(float(rating)) is not float:
 
-                    print("\n------------------------------\nPlease input a valid response.\n------------------------------")
+                #if type(int(rating)) is not int or type(float(rating)) is not float:
 
-                Let's just pretend that all answers will be valid casts.
-                """
+                    #print("\n------------------------------\nPlease input a valid response.\n------------------------------")
+
+                #Let's just pretend that all answers will be valid casts.
+
 
                 if int(rating) <= 5:
 
@@ -266,6 +267,39 @@ class UI:
                     print("\n----------------------------------------------")
                     print("\nI don't think you'll be needing our help then.")
                     print("\n----------------------------------------------\n")
+                """
+
+                print("\n-----------------------------------")
+                print("\nWould you like to learn more? [y/n]")
+                resp = input("\n-----------------------------------\n\n")
+
+                if confirm == "y" or confirm == "yes":
+
+                    print("\n------------------")
+                    print("\nHave at it, champ.")
+                    print("\n------------------\n")
+                    for similar_name in group_list:
+                        stalkee = self.db.database[similar_name]
+                        print("\nName: " + stalkee.name)
+                        print("\nBiography: " + stalkee.biography)
+                        print("\nContact: " + stalkee.contact)
+                        print("\nPositivity Score: " + "0")
+                        print("\nPicture: \n")
+                        imgplot = plt.imshow(stalkee.picture)
+                        plt.show()
+
+                elif confirm == "n" or confirm == "no":
+
+                    print("\n--------------")
+                    print("\nSuit yourself.")
+                    print("\n--------------\n")
+
+                else:
+
+                    print("\n------------------------------")
+                    print("\nPlease input a valid response.")
+                    print("\n------------------------------\n")
+
 
                 self.user_prompt(True)
 

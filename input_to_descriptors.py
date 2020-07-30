@@ -1,10 +1,10 @@
 import numpy as np
 import re, string
-# import camera
+import camera
 from collections import Counter
 from database import Database
 from recognize_speech import recognize_speech_record
-# from predict_emotion import take_image_classify_emotion
+from predict_emotion import take_image_classify_emotion
 from bio_summarization import summarize_doc
 
 
